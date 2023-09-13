@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MyGithubUser" parent="Theme.Material3.Light">
+        <!-- Set custom font family -->
+        <item name="colorPrimary">@color/md_theme_light_onBackground</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+        <!-- Customize ActionBar background color -->
+        <item name="android:actionMenuTextColor">@style/MyActionBar</item>
+    </style>
+
+    <style name="Theme.MyGithubUser" parent="Base.Theme.MyGithubUser" />
+
+    <style name="CustomDialogStyle" parent="Base.Theme.MyGithubUser">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/design_default_color_error</item>
+    </style>
+</resources>
