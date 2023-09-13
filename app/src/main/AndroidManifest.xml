@@ -16,16 +16,15 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.main.UserGithubActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:configChanges="orientation|screenSize"
+            android:exported="false"/>
         <activity
             android:name=".ui.detail.DetailGithubActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:configChanges="orientation|screenSize"
+            android:exported="false"/>
         <activity
             android:name=".ui.splash.SplashActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

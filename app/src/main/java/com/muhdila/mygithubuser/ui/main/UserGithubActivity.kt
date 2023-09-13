@@ -1,15 +1,14 @@
 package com.muhdila.mygithubuser.ui.main
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.muhdila.mygithubuser.R
 import com.muhdila.mygithubuser.data.response.UserGithubItems
 import com.muhdila.mygithubuser.databinding.ActivityUserGithubBinding
 import com.muhdila.mygithubuser.ui.NavBarColor
@@ -41,7 +40,7 @@ class UserGithubActivity : AppCompatActivity() {
         setupSearchBar()
         observeViewModel()
     }
-
+    
     private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(this)
         binding.rvUser.layoutManager = layoutManager
@@ -66,6 +65,16 @@ class UserGithubActivity : AppCompatActivity() {
         userGithubViewModel.userGithubList.observe(this) { setUserData(it) }
         userGithubViewModel.userGithubSearch.observe(this) { dataUser -> setUserData(dataUser) }
         userGithubViewModel.isLoading.observe(this) { showLoading(it) }
+        // Observe data from ViewModel and populate your RecyclerView
+        userGithubViewModel.userGithubList.observe(this) { data ->
+            if (data != null) {
+                // Populate RecyclerView with data
+                setUserData(data)
+            } else {
+                // Data not available, fetch it
+                userGithubViewModel.userGithubList()
+            }
+        }
     }
 
     private fun setUserData(githubUser: List<UserGithubItems>) {

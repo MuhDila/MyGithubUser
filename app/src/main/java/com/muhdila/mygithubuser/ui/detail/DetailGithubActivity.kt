@@ -52,6 +52,16 @@ class DetailGithubActivity : AppCompatActivity() {
     private fun observeViewModel() {
         detailGithubViewModel.isLoading.observe(this) { isLoading -> showLoading(isLoading) }
         detailGithubViewModel.userGithubDetail.observe(this) { detailData -> githubUserDetail(detailData) }
+        // Observe data from ViewModel and populate your UI
+        detailGithubViewModel.userGithubDetail.observe(this) { detailData ->
+            if (detailData != null) {
+                // Populate UI elements with data
+                githubUserDetail(detailData)
+            } else {
+                // Data not available, fetch it
+                setupDataFromIntent()
+            }
+        }
     }
 
     private fun setupViewPager() {
