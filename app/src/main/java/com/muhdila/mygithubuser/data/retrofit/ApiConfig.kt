@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConfig {
     companion object {
-        private const val AUTH_TOKEN = "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"
+        private const val AUTH_TOKEN = "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"
 
         @SuppressLint("SuspiciousIndentation")
         fun getApiService(): ApiService {

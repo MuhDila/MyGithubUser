@@ -1,9 +1,11 @@
 package com.muhdila.mygithubuser.ui.main
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -40,7 +42,7 @@ class UserGithubActivity : AppCompatActivity() {
         setupSearchBar()
         observeViewModel()
     }
-    
+
     private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(this)
         binding.rvUser.layoutManager = layoutManager
@@ -51,10 +53,31 @@ class UserGithubActivity : AppCompatActivity() {
     private fun setupSearchBar() {
         with(binding) {
             searchView.setupWithSearchBar(searchBar)
-            searchView.editText.setOnEditorActionListener { _, _, _ ->
-                val textSearchBar = searchView.text
-                searchView.hide()
-                userGithubViewModel.userGithubSearch(textSearchBar.toString())
+            searchView.editText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    // Do nothing before text changes
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // Update the user list as the text changes
+                    userGithubViewModel.userGithubSearch(s.toString())
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    // Do nothing after text changes
+                }
+            })
+
+            searchView.editText.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    val textSearchBar = searchView.text
+                    userGithubViewModel.userGithubSearch(textSearchBar.toString())
+
+                    // Hide the search view
+                    searchView.hide()
+
+                    return@setOnEditorActionListener true
+                }
                 false
             }
         }

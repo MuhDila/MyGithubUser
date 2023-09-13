@@ -20,10 +20,9 @@
     <com.google.android.material.search.SearchView
         android:id="@+id/searchView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="71dp"
         android:hint="@string/search"
         app:layout_anchor="@id/searchBar"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
