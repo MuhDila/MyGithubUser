@@ -7,6 +7,16 @@
     <string name="follower">Follower</string>
     <string name="following">Following</string>
     <string name="detail">Detail</string>
+    <string name="favourite">Favourite</string>
+    <string name="setting">Setting</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="image">Image</string>
+    <string name="img_fav">Image Favorite</string>
+    <string name="img_setting">Image Setting</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="save_bookmark">Save Bookmark</string>
+    <string name="followers_placeholder">%1$d Followers</string>
+    <string name="following_placeholder">%1$d Following</string>
+    <string name="go_to_home">Go To Home</string>
 </resources>

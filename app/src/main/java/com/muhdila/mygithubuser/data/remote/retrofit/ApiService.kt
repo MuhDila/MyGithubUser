@@ -1,8 +1,8 @@
-package com.muhdila.mygithubuser.data.retrofit
+package com.muhdila.mygithubuser.data.remote.retrofit
 
-import com.muhdila.mygithubuser.data.response.UserGithubItems
-import com.muhdila.mygithubuser.data.response.UserGithubResponse
-import com.muhdila.mygithubuser.data.response.UserGithubResponseDetail
+import com.muhdila.mygithubuser.data.remote.response.UserGithubItems
+import com.muhdila.mygithubuser.data.remote.response.UserGithubResponse
+import com.muhdila.mygithubuser.data.remote.response.UserGithubResponseDetail
 import retrofit2.Call
 import retrofit2.http.*
 

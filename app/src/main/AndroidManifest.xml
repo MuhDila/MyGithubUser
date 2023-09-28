@@ -15,13 +15,19 @@
         android:theme="@style/Theme.MyGithubUser"
         tools:targetApi="31">
         <activity
+            android:name=".ui.favourite.FavouriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.setting.SettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.main.UserGithubActivity"
             android:configChanges="orientation|screenSize"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ui.detail.DetailGithubActivity"
             android:configChanges="orientation|screenSize"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true">

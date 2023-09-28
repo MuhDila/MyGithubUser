@@ -4,14 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.muhdila.mygithubuser.data.response.UserGithubItems
+import com.muhdila.mygithubuser.data.helper.UserGithubDiffCallback
+import com.muhdila.mygithubuser.data.helper.loadImage
+import com.muhdila.mygithubuser.data.remote.response.UserGithubItems
 import com.muhdila.mygithubuser.databinding.ItemRowUserBinding
 
-class UserGithubAdapter(private val listGithubUser: List<UserGithubItems>) :
-    RecyclerView.Adapter<UserGithubAdapter.ViewHolder>() {
+class UserGithubAdapter : RecyclerView.Adapter<UserGithubAdapter.ViewHolder>() {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
+    private val items = mutableListOf<UserGithubItems>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemRowUserBinding.inflate(
@@ -22,28 +23,41 @@ class UserGithubAdapter(private val listGithubUser: List<UserGithubItems>) :
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return listGithubUser.size
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val githubUser = items[position]
+        holder.bind(githubUser)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val githubUser = listGithubUser[position]
-        with(holder.binding) {
-            tvItemName.text = githubUser.login
-            tvItemUrl.text = githubUser.homeUrl
-            Glide.with(root.context).load(githubUser.avatarUrl).into(imgItemPhoto)
-            root.setOnClickListener {
-                onItemClickCallback.onItemClicked(githubUser)
-            }
-        }
+    override fun getItemCount(): Int {
+        return items.size
     }
 
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
         this.onItemClickCallback = onItemClickCallback
     }
 
-    inner class ViewHolder(val binding: ItemRowUserBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    fun submitList(newList: List<UserGithubItems>) {
+        val diffCallback = UserGithubDiffCallback(items, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        items.clear()
+        items.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    inner class ViewHolder(private val binding: ItemRowUserBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(githubUser: UserGithubItems) {
+            with(binding) {
+                tvItemName.text = githubUser.login
+                tvItemUrl.text = githubUser.homeUrl
+                imgItemPhoto.loadImage(githubUser.avatarUrl)
+                root.setOnClickListener {
+                    onItemClickCallback.onItemClicked(githubUser)
+                }
+            }
+        }
+    }
 
     interface OnItemClickCallback {
         fun onItemClicked(data: UserGithubItems)

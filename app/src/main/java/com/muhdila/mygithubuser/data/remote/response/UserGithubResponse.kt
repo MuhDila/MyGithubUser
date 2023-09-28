@@ -1,4 +1,4 @@
-package com.muhdila.mygithubuser.data.response
+package com.muhdila.mygithubuser.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
@@ -20,7 +20,7 @@ data class UserGithubItems(
 	val login: String,
 
 	@field:SerializedName("html_url")
-	val homeUrl: String,
+	val homeUrl: String?,
 
 	@field:SerializedName("avatar_url")
 	val avatarUrl: String

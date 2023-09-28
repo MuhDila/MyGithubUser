@@ -1,4 +1,4 @@
-package com.muhdila.mygithubuser.data.response
+package com.muhdila.mygithubuser.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
@@ -6,6 +6,9 @@ data class UserGithubResponseDetail(
 
 	@field:SerializedName("login")
 	val login: String,
+
+	@field:SerializedName("id")
+	val id: Int,
 
 	@field:SerializedName("followers")
 	val followers: Int,

@@ -1,4 +1,4 @@
-package com.muhdila.mygithubuser.data.retrofit
+package com.muhdila.mygithubuser.data.remote.retrofit
 
 import android.annotation.SuppressLint
 import okhttp3.Interceptor
@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConfig {
     companion object {
-        private const val AUTH_TOKEN = "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"
+        private const val AUTH_TOKEN = "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"
 
         @SuppressLint("SuspiciousIndentation")
         fun getApiService(): ApiService {

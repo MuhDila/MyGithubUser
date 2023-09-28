@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.muhdila.mygithubuser.data.response.UserGithubItems
-import com.muhdila.mygithubuser.data.retrofit.ApiConfig
+import com.muhdila.mygithubuser.data.remote.response.UserGithubItems
+import com.muhdila.mygithubuser.data.remote.retrofit.ApiConfig
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

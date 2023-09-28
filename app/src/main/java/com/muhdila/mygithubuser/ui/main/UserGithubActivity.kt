@@ -2,25 +2,31 @@ package com.muhdila.mygithubuser.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.muhdila.mygithubuser.data.response.UserGithubItems
+import com.muhdila.mygithubuser.R
+import com.muhdila.mygithubuser.data.remote.response.UserGithubItems
 import com.muhdila.mygithubuser.databinding.ActivityUserGithubBinding
 import com.muhdila.mygithubuser.ui.NavBarColor
 import com.muhdila.mygithubuser.ui.detail.DetailGithubActivity
 import com.muhdila.mygithubuser.ui.detail.DetailGithubViewModel
+import com.muhdila.mygithubuser.ui.favourite.FavouriteActivity
+import com.muhdila.mygithubuser.ui.setting.SettingActivity
+import com.muhdila.mygithubuser.ui.setting.SettingPreferences
+import com.muhdila.mygithubuser.ui.setting.SettingViewModel
+import com.muhdila.mygithubuser.ui.setting.ViewModelFactory
+import com.muhdila.mygithubuser.ui.setting.dataStore
 
 class UserGithubActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserGithubBinding
     private lateinit var userGithubViewModel: UserGithubViewModel
+    private lateinit var adapter: UserGithubAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +34,21 @@ class UserGithubActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Setting color status bar and navigator bar
-        NavBarColor.setStatusBarAndNavBarColors(this)
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        NavBarColor.setColor(this, toolbar)
 
         // Hide action bar
         supportActionBar?.hide()
+
+        // Image button clicked
+        binding.layoutSearch.imgSetting.setOnClickListener{
+            val intent = Intent(this@UserGithubActivity, SettingActivity::class.java)
+            startActivity(intent)
+        }
+        binding.layoutSearch.imgFav.setOnClickListener {
+            val intent = Intent(this@UserGithubActivity, FavouriteActivity::class.java)
+            startActivity(intent)
+        }
 
         userGithubViewModel = ViewModelProvider(
             this,
@@ -41,6 +58,8 @@ class UserGithubActivity : AppCompatActivity() {
         setupRecyclerView()
         setupSearchBar()
         observeViewModel()
+        // Theme
+        settingTheme()
     }
 
     private fun setupRecyclerView() {
@@ -48,38 +67,24 @@ class UserGithubActivity : AppCompatActivity() {
         binding.rvUser.layoutManager = layoutManager
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvUser.addItemDecoration(itemDecoration)
+
+        // Initialize the adapter
+        adapter = UserGithubAdapter()
+        binding.rvUser.adapter = adapter
     }
 
     private fun setupSearchBar() {
+        val searchBar = binding.layoutSearch.searchBar
         with(binding) {
             searchView.setupWithSearchBar(searchBar)
-            searchView.editText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    // Do nothing before text changes
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    // Update the user list as the text changes
-                    userGithubViewModel.userGithubSearch(s.toString())
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    // Do nothing after text changes
-                }
-            })
-
-            searchView.editText.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            searchView
+                .editText
+                .setOnEditorActionListener { _, _, _ ->
                     val textSearchBar = searchView.text
                     userGithubViewModel.userGithubSearch(textSearchBar.toString())
-
-                    // Hide the search view
                     searchView.hide()
-
-                    return@setOnEditorActionListener true
+                    true
                 }
-                false
-            }
         }
     }
 
@@ -88,21 +93,11 @@ class UserGithubActivity : AppCompatActivity() {
         userGithubViewModel.userGithubList.observe(this) { setUserData(it) }
         userGithubViewModel.userGithubSearch.observe(this) { dataUser -> setUserData(dataUser) }
         userGithubViewModel.isLoading.observe(this) { showLoading(it) }
-        // Observe data from ViewModel and populate your RecyclerView
-        userGithubViewModel.userGithubList.observe(this) { data ->
-            if (data != null) {
-                // Populate RecyclerView with data
-                setUserData(data)
-            } else {
-                // Data not available, fetch it
-                userGithubViewModel.userGithubList()
-            }
-        }
     }
 
     private fun setUserData(githubUser: List<UserGithubItems>) {
-        val adapter = UserGithubAdapter(githubUser)
-        binding.rvUser.adapter = adapter
+        // Submit data to the adapter
+        adapter.submitList(githubUser)
 
         adapter.setOnItemClickCallback(object : UserGithubAdapter.OnItemClickCallback {
             override fun onItemClicked(data: UserGithubItems) {
@@ -110,12 +105,30 @@ class UserGithubActivity : AppCompatActivity() {
             }
         })
 
-        if (adapter.itemCount < 1) Toast.makeText(this, "Data Not Found", Toast.LENGTH_SHORT).show().also { userGithubViewModel.userGithubList.observe(this) { setUserData(it) } }
+        // Handle empty data case
+        if (githubUser.isEmpty()) {
+            Toast.makeText(this, "Data Not Found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun settingTheme(){
+        val pref = SettingPreferences.getInstance(application.dataStore)
+        val mainViewModel = ViewModelProvider(this, ViewModelFactory(pref))[SettingViewModel::class.java]
+
+        mainViewModel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
     }
 
     private fun putDetailUser(data: UserGithubItems) {
-        val intent = Intent(this@UserGithubActivity, DetailGithubActivity::class.java)
+        val intent = Intent(this, DetailGithubActivity::class.java)
         intent.putExtra(DetailGithubViewModel.USERNAME, data.login)
+        intent.putExtra(DetailGithubViewModel.HOME_URL, data.homeUrl)
+        intent.putExtra(DetailGithubViewModel.AVATAR_URL, data.avatarUrl)
         startActivity(intent)
     }
 

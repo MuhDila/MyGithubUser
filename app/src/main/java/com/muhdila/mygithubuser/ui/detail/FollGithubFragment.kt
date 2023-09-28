@@ -1,5 +1,6 @@
 package com.muhdila.mygithubuser.ui.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.muhdila.mygithubuser.data.response.UserGithubItems
+import com.muhdila.mygithubuser.data.remote.response.UserGithubItems
 import com.muhdila.mygithubuser.databinding.FragmentFollGithubBinding
+import com.muhdila.mygithubuser.ui.main.UserGithubAdapter
 
 class FollGithubFragment : Fragment() {
 
@@ -67,9 +69,23 @@ class FollGithubFragment : Fragment() {
 
     }
 
+    private fun putDetailUser(data: UserGithubItems) {
+        val intent = Intent(requireContext(), DetailGithubActivity::class.java)
+        intent.putExtra(DetailGithubViewModel.USERNAME, data.login)
+        intent.putExtra(DetailGithubViewModel.HOME_URL, data.homeUrl)
+        intent.putExtra(DetailGithubViewModel.AVATAR_URL, data.avatarUrl)
+        startActivity(intent)
+    }
+
     private fun setUserGithubFoll(userFoll: List<UserGithubItems>) {
         val adapter = FollGithubAdapter(userFoll)
         binding.rvUser.adapter = adapter
+
+        adapter.setOnItemClickCallback(object : UserGithubAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: UserGithubItems) {
+                putDetailUser(data)
+            }
+        })
     }
 
     private fun showLoading(isLoading: Boolean) {
