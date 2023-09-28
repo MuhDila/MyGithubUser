@@ -12,13 +12,13 @@ This is the repository for my "My Github User" Android application. This app all
 
 ### Screenshots
 
-[![Screenshot 1](https://res.cloudinary.com/dhadtef9h/image/upload/v1695902249/Artboard_1_1_jrig4v.png)
+![Screenshot 1](https://res.cloudinary.com/dhadtef9h/image/upload/v1695902249/Artboard_1_1_jrig4v.png)
 
 ### Installation
 
 To run this app on your device, follow these steps:
 
-1. Clone this repository: `git clone https://github.com/yourusername/MyGithubUser.git`
+1. Clone this repository: `git clone https://github.com/MuhDila/MyGithubUser.git`
 2. Open the project in Android Studio.
 3. Build and run the app on your device or emulator.
 
