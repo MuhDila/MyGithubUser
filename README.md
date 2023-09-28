@@ -12,8 +12,7 @@ This is the repository for my "My Github User" Android application. This app all
 
 ### Screenshots
 
-![Screenshot 1](/screenshots/screenshot1.png)
-![Screenshot 2](/screenshots/screenshot2.png)
+![Screenshot 1]([/screenshots/screenshot1.png](https://res.cloudinary.com/dhadtef9h/image/upload/v1695902249/Artboard_1_1_jrig4v.png))
 
 ### Installation
 
